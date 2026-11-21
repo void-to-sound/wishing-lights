@@ -1,0 +1,297 @@
+:root {
+  color-scheme: dark;
+  --bg: #060912;
+  --ink: #e7eef8;
+  --muted: #93a1b8;
+  --line: rgba(190, 210, 240, 0.16);
+  --panel: rgba(10, 16, 30, 0.78);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+body {
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+#canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+canvas {
+  display: block;
+}
+
+.panel {
+  position: fixed;
+  z-index: 1;
+  top: 18px;
+  left: 18px;
+  width: min(340px, calc(100vw - 36px));
+  max-height: calc(100vh - 36px);
+  overflow: auto;
+  padding: 22px 22px 18px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--panel);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+}
+
+.eyebrow {
+  margin: 0;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+h1 {
+  margin: 6px 0 8px;
+  font-family: "Iowan Old Style", Palatino, Georgia, serif;
+  font-weight: 500;
+  font-size: 32px;
+  letter-spacing: -0.03em;
+}
+
+.lede,
+.hint,
+.note-order,
+.keys,
+.mode-caption,
+.status {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.lede {
+  margin: 0;
+}
+
+.transport,
+.modes {
+  display: flex;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.modes {
+  margin-top: 10px;
+}
+
+button {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 999px;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid #d5e4ff;
+  outline-offset: 2px;
+}
+
+#play {
+  background: #e7eef8;
+  color: #10131c;
+  border-color: transparent;
+}
+
+#play:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.modes button {
+  flex: 1;
+}
+
+button[aria-pressed='true'] {
+  background: rgba(213, 228, 255, 0.16);
+  border-color: rgba(213, 228, 255, 0.55);
+  color: var(--ink);
+}
+
+.mode-caption {
+  margin: 8px 0 0;
+  min-height: 2.8em;
+}
+
+.readout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 16px 0 0;
+}
+
+.readout div {
+  padding: 10px 12px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+dt {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+dd {
+  margin: 4px 0 0;
+  font-family: Palatino, Georgia, serif;
+  font-size: 28px;
+}
+
+.schedule {
+  display: flex;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.schedule.is-idle {
+  opacity: 0.45;
+}
+
+.chip {
+  flex: 1;
+  text-align: center;
+  padding: 6px 0;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.chip.is-active {
+  color: var(--ink);
+  border-color: rgba(213, 228, 255, 0.7);
+  background: rgba(213, 228, 255, 0.12);
+}
+
+.track {
+  margin-top: 8px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.track[hidden] {
+  display: none;
+}
+
+#track-fill {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: #d5e4ff;
+}
+
+.field {
+  display: block;
+  margin-top: 16px;
+}
+
+.field-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+}
+
+input[type='range'] {
+  width: 100%;
+  margin: 10px 0 0;
+  accent-color: #d5e4ff;
+}
+
+input[type='text'] {
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.hint,
+.error,
+.note-order,
+.keys,
+.status {
+  display: block;
+}
+
+.hint {
+  margin-top: 8px;
+}
+
+.error {
+  margin-top: 6px;
+  color: #ffb7c8;
+  min-height: 0;
+}
+
+.error:empty {
+  display: none;
+}
+
+.note-order {
+  margin: 16px 0 0;
+}
+
+.keys,
+.status {
+  margin: 8px 0 0;
+}
+
+.status:empty {
+  display: none;
+}
+
+#boot-error {
+  position: fixed;
+  z-index: 2;
+  left: 18px;
+  bottom: 18px;
+  max-width: 420px;
+  margin: 0;
+  color: #ffb7c8;
+}
+
+#boot-error[hidden] {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .panel {
+    top: auto;
+    right: 12px;
+    bottom: 12px;
+    left: 12px;
+    width: auto;
+    max-height: 46vh;
+  }
+}

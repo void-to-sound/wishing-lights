@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Variable rotation</title>
+    <link rel="stylesheet" href="./css/style.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "p5": "https://cdn.jsdelivr.net/npm/p5@1.11.3/+esm",
+          "tone": "https://cdn.jsdelivr.net/npm/tone@15.1.22/+esm"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="canvas"></div>
+    <aside class="panel">
+      <p class="eyebrow">Orbita</p>
+      <h1>Variable rotation</h1>
+      <p class="lede">
+        Six notes on a disc, and a sensor that stays at the top. The spin is the rhythm.
+      </p>
+
+      <div class="transport">
+        <button id="play" type="button" aria-pressed="false">Play</button>
+        <button id="reset" type="button">Reset</button>
+      </div>
+
+      <div class="modes" role="group" aria-label="Rotation mode">
+        <button id="mode-constant" type="button" aria-pressed="false">Constant</button>
+        <button id="mode-variable" type="button" aria-pressed="true">Variable</button>
+      </div>
+      <p id="mode-caption" class="mode-caption"></p>
+
+      <dl class="readout">
+        <div>
+          <dt>Speed</dt>
+          <dd id="multiplier">2×</dd>
+        </div>
+        <div>
+          <dt>Note</dt>
+          <dd id="note">—</dd>
+        </div>
+      </dl>
+
+      <div id="schedule" class="schedule"></div>
+      <div id="track" class="track"><span id="track-fill"></span></div>
+
+      <label class="field">
+        <span class="field-label">
+          <span>Base rotation speed</span>
+          <span id="rpm-label">10 RPM</span>
+        </span>
+        <input id="rpm" type="range" min="4" max="28" step="0.5" value="10" />
+        <span id="rpm-hint" class="hint"></span>
+      </label>
+
+      <label class="field">
+        <span class="field-label">Speed pattern</span>
+        <input
+          id="pattern"
+          type="text"
+          value="2, 1, 3, 1"
+          spellcheck="false"
+          autocomplete="off"
+          aria-describedby="pattern-hint"
+        />
+        <span id="pattern-hint" class="hint">
+          Each number multiplies the base speed for one quarter-turn. 1 is slow, 2 is twice that, 3 is three times.
+        </span>
+        <span id="pattern-error" class="error" role="status"></span>
+      </label>
+
+      <p class="note-order">
+        Clockwise from the top: C4, E4, G4, B4, D5, A4. The disc turns clockwise, so the sensor hears A4, D5, B4, G4, E4, C4.
+      </p>
+      <p class="keys">Space plays and pauses.</p>
+      <p id="status" class="status" role="status"></p>
+    </aside>
+    <p id="boot-error" hidden></p>
+    <script type="module">
+      import('./js/main.js').catch((error) => {
+        const el = document.querySelector('#boot-error')
+        el.hidden = false
+        el.textContent =
+          'Could not start. Serve this folder over http, and allow the page to load p5.js and Tone.js.'
+        console.error(error)
+      })
+    </script>
+  </body>
+</html>

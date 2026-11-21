@@ -1,0 +1,394 @@
+:root {
+  color-scheme: dark;
+  background: #14110e;
+  color: #f6f0e8;
+  font-family: "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background:
+    radial-gradient(ellipse at center, #2a221c 0%, #14110e 70%);
+}
+
+button {
+  font: inherit;
+  color: #f6f0e8;
+  background: rgba(22, 16, 12, 0.52);
+  border: 1px solid rgba(246, 240, 232, 0.28);
+  border-radius: 999px;
+  padding: 0.4rem 0.85rem;
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+}
+
+button:hover {
+  background: rgba(22, 16, 12, 0.72);
+}
+
+button:focus-visible {
+  outline: 1px solid rgba(255, 214, 170, 0.85);
+  outline-offset: 3px;
+}
+
+.app {
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.stage {
+  position: relative;
+  width: min(100vw, calc(100vh * 16 / 9));
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #cfc3b2;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
+}
+
+.room {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  pointer-events: none;
+}
+
+.dog-anchor {
+  position: absolute;
+  z-index: 2;
+  width: 33%;
+  height: 58%;
+  transition-property: left, bottom, transform;
+  transition-timing-function: ease-in-out;
+}
+
+.shadow {
+  position: absolute;
+  left: 50%;
+  bottom: 0.5%;
+  width: 58%;
+  height: 7%;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse, rgba(42, 26, 14, 0.42), transparent 72%);
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+.shadow.low {
+  width: 82%;
+  height: 5.5%;
+  opacity: 0.8;
+}
+
+.flip,
+.body {
+  position: absolute;
+  inset: 0;
+}
+
+.body {
+  transform-origin: center 74%;
+}
+
+.sprite {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  transform-origin: center bottom;
+  pointer-events: none;
+  user-select: none;
+  filter: sepia(0.1) saturate(0.86) contrast(1.04) brightness(0.98);
+}
+
+.sprite.in {
+  animation-name: fade-in;
+  animation-timing-function: ease;
+  animation-fill-mode: forwards;
+}
+
+.sprite.out {
+  animation-name: fade-out;
+  animation-timing-function: ease;
+  animation-fill-mode: forwards;
+}
+
+.breathing {
+  animation: breath 4.8s ease-in-out infinite;
+}
+
+.walking {
+  animation: bob 0.46s ease-in-out infinite;
+}
+
+.sniffing {
+  animation: sniff-bob 1.7s ease-in-out infinite;
+}
+
+.snoring {
+  animation: snore-breath 1.25s ease-in-out;
+}
+
+.twitch {
+  animation: twitch 0.48s ease-in-out;
+}
+
+.hit {
+  position: absolute;
+  z-index: 3;
+  inset: 12% 6% 0;
+  padding: 0;
+  border: 0;
+  border-radius: 40%;
+  background: transparent;
+  backdrop-filter: none;
+  cursor: default;
+}
+
+.hit:hover,
+.hit:focus-visible {
+  background: transparent;
+}
+
+.fire {
+  position: absolute;
+  z-index: 3;
+  left: 70.5%;
+  top: 31%;
+  width: 13%;
+  height: 16%;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at 50% 70%,
+    rgba(255, 196, 110, 0.75),
+    rgba(255, 92, 24, 0.22) 46%,
+    transparent 72%
+  );
+  mix-blend-mode: screen;
+  filter: blur(1.5px);
+  animation: flame 1.6s ease-in-out infinite;
+}
+
+.warmth {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 76% 42%, rgba(255, 148, 54, 0.42), transparent 46%),
+    linear-gradient(100deg, rgba(186, 206, 222, 0.18), transparent 34%);
+  mix-blend-mode: soft-light;
+  animation: pulse 3.6s ease-in-out infinite;
+}
+
+.vignette {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 52%, rgba(28, 18, 12, 0.28) 100%);
+}
+
+.sound,
+.debug {
+  position: fixed;
+  z-index: 6;
+}
+
+.sound {
+  top: 1rem;
+  right: 1rem;
+}
+
+.debug {
+  left: 1rem;
+  bottom: 1rem;
+}
+
+.debug-panel {
+  width: 13rem;
+  margin-top: 0.45rem;
+  padding: 0.75rem 0.75rem 0.8rem;
+  background: rgba(22, 16, 12, 0.66);
+  border: 1px solid rgba(246, 240, 232, 0.18);
+  border-radius: 0.95rem;
+  backdrop-filter: blur(14px);
+}
+
+.debug-state {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0 0 0.65rem;
+  font-size: 0.95rem;
+}
+
+.debug-state span {
+  opacity: 0.68;
+}
+
+.debug-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.debug-actions button {
+  padding: 0.28rem 0.65rem;
+  font-size: 0.86rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes breath {
+  0%,
+  100% {
+    transform: scale(1, 1);
+  }
+  50% {
+    transform: scale(1.012, 1.03);
+  }
+}
+
+@keyframes snore-breath {
+  0%,
+  100% {
+    transform: scale(1, 1);
+  }
+  45% {
+    transform: scale(1.02, 1.045);
+  }
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes sniff-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(2px);
+  }
+}
+
+@keyframes twitch {
+  0% {
+    transform: rotate(0deg);
+  }
+  35% {
+    transform: rotate(-1.1deg);
+  }
+  70% {
+    transform: rotate(0.45deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes flame {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  28% {
+    opacity: 0.95;
+    transform: scale(1.06, 1.1);
+  }
+  47% {
+    opacity: 0.45;
+    transform: scale(0.96, 0.92);
+  }
+  71% {
+    opacity: 0.88;
+    transform: scale(1.04, 1.08);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.62;
+  }
+  35% {
+    opacity: 0.95;
+  }
+  58% {
+    opacity: 0.5;
+  }
+  80% {
+    opacity: 0.86;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .breathing,
+  .walking,
+  .sniffing,
+  .snoring,
+  .twitch,
+  .fire,
+  .warmth,
+  .sprite.in,
+  .sprite.out {
+    animation: none;
+  }
+
+  .sprite.in,
+  .sprite.out {
+    opacity: 1;
+  }
+}

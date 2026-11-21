@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ornament color transfer</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <p class="studio">Wishing Lights experiment</p>
+      <h1>Ornament color transfer</h1>
+      <p class="lede">
+        Upload three photographs. Each one lends five colors to the glass.
+        Switch ornaments to compare the milky V1 ball with the faceted V2 crystal.
+        The metal cap, bright reflections, dark shadows, and empty background stay as they are.
+      </p>
+
+      <section class="controls">
+        <label>
+          Ornament
+          <select id="version">
+            <option value="v1">V1 milky glass</option>
+            <option value="v2">V2 faceted crystal</option>
+            <option value="both">Compare side by side</option>
+          </select>
+        </label>
+        <label>
+          Technique
+          <select id="technique">
+            <option value="luma">Luminance-preserving</option>
+            <option value="hsl">HSL transfer</option>
+          </select>
+        </label>
+        <label class="strength">
+          Color strength
+          <span id="strength-value">80%</span>
+          <input id="strength" type="range" min="0" max="100" value="80" />
+        </label>
+      </section>
+
+      <section class="photos" aria-label="Photographs">
+        <article class="photo" data-slot="0">
+          <img alt="First photograph" hidden />
+          <div class="palette"></div>
+          <label class="pick">
+            Add photo 1
+            <input data-slot="0" type="file" accept="image/jpeg,image/png,image/webp" />
+          </label>
+        </article>
+        <article class="photo" data-slot="1">
+          <img alt="Second photograph" hidden />
+          <div class="palette"></div>
+          <label class="pick">
+            Add photo 2
+            <input data-slot="1" type="file" accept="image/jpeg,image/png,image/webp" />
+          </label>
+        </article>
+        <article class="photo" data-slot="2">
+          <img alt="Third photograph" hidden />
+          <div class="palette"></div>
+          <label class="pick">
+            Add photo 3
+            <input data-slot="2" type="file" accept="image/jpeg,image/png,image/webp" />
+          </label>
+        </article>
+      </section>
+
+      <div id="boards"></div>
+
+      <p class="note">
+        Look for real glass: reflections should stay bright, the cap should stay silver,
+        and three very different palettes should still read as the same ornament.
+      </p>
+    </main>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

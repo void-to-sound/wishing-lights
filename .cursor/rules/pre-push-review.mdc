@@ -1,0 +1,48 @@
+---
+description: Review secrets, artifacts, and checks before any commit or push
+alwaysApply: true
+---
+
+# Pre-push review
+
+When the user asks to commit or push, review first. Do not commit, push, or amend until they explicitly approve after the report.
+
+## Inspect
+
+- `git status`, staged and unstaged diffs, and the commits that would be pushed.
+- If the branch has an upstream, review `git log @{upstream}..HEAD` and `git diff @{upstream}...HEAD`.
+- If it does not, review every commit that the push would send.
+
+## Scan the changes
+
+Block secrets and credentials: `.env` and `.env.*` (except `.env.example`), API keys, tokens, passwords, Stripe keys (`sk_live_`, `sk_test_`, `rk_live_`, `whsec_`), private keys, and personal data.
+
+Block accidental photos, user memory messages, `dist/`, `node_modules/`, and other build artifacts. Warn on files over 1 MB. `public/favicon.svg` is the only expected image.
+
+## Check
+
+- Run `npm run lint` and `npm run build` (`tsc -b` plus the production build).
+- Run tests only when a test script exists. This project has none; say that.
+- Read the diff for obvious bugs, privacy leaks, and logs of photos, colors, messages, or tokens.
+
+## Report
+
+Use these headings, with one short reason per item:
+
+- **BLOCKERS** — must be fixed before commit or push. Write "None" when empty.
+- **WARNINGS** — worth knowing, not a stop. Write "None" when empty.
+- **PASSED** — inspections and commands that succeeded.
+
+Then stop and ask whether to proceed.
+
+```text
+BLOCKERS
+- .env.local is staged and contains STRIPE_SECRET_KEY.
+
+WARNINGS
+- None.
+
+PASSED
+- No secrets in the staged diff.
+- npm run lint and npm run build succeeded.
+```

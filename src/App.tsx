@@ -204,7 +204,7 @@ function App() {
     <div className="app">
       <h1 className="visually-hidden">Wishing Lights</h1>
 
-      <WinterScene>
+      <WinterScene experiment={new URLSearchParams(window.location.search).has('camera')}>
         <ChristmasTree
           ornaments={placed}
           placing={pending !== null}

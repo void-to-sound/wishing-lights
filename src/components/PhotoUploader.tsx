@@ -28,6 +28,7 @@ interface PhotoUploaderProps {
   previewUrl: string | null
   colors: string[]
   ornament?: ReactNode
+  disabled?: boolean
   onPhotoReady: (photo: PreparedPhoto) => void
 }
 
@@ -39,6 +40,7 @@ export function PhotoUploader({
   previewUrl,
   colors,
   ornament,
+  disabled = false,
   onPhotoReady,
 }: PhotoUploaderProps) {
   const [error, setError] = useState<string | null>(null)
@@ -71,6 +73,7 @@ export function PhotoUploader({
       setError(null)
       onPhotoReady({
         photoUrl: URL.createObjectURL(decoded.displayBlob),
+        photo: decoded.displayBlob,
         colors: extracted,
       })
     } catch {
@@ -119,12 +122,13 @@ export function PhotoUploader({
         </div>
       ) : null}
 
-      <label className="button">
+      <label className="button" aria-disabled={disabled || undefined}>
         Add Photo
         <input
           className="visually-hidden"
           type="file"
           accept={ACCEPT}
+          disabled={disabled}
           onChange={handleChange}
         />
       </label>

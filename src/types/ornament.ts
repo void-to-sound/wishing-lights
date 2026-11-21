@@ -31,6 +31,9 @@ export interface Ornament {
 
 /** Result of reading a photograph, before it becomes an ornament. */
 export interface PreparedPhoto {
+  /** Temporary object URL for the preview. Not stored. */
   photoUrl: string
+  /** Display photo to persist. The object URL is rebuilt from this after a reload. */
+  photo: Blob
   colors: string[]
 }

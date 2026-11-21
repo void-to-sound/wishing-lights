@@ -3,6 +3,7 @@ import { ChristmasTree } from './components/ChristmasTree.tsx'
 import { MemoryViewer } from './components/MemoryViewer.tsx'
 import { Ornament } from './components/Ornament.tsx'
 import { PhotoUploader } from './components/PhotoUploader.tsx'
+import { WinterScene } from './components/WinterScene.tsx'
 import {
   deleteOrnament,
   loadOrnaments,
@@ -201,35 +202,24 @@ function App() {
 
   return (
     <div className="app">
-      <header className="header">
-        <h1>Wishing Lights</h1>
-        <p>Turn a photograph into an ornament and hang it on the tree.</p>
-      </header>
+      <h1 className="visually-hidden">Wishing Lights</h1>
+
+      <WinterScene>
+        <ChristmasTree
+          ornaments={placed}
+          placing={pending !== null}
+          onPlace={handlePlace}
+          onSelect={setSelectedId}
+        />
+      </WinterScene>
 
       {storageError ? (
-        <p className="error idle-hint" role="alert">
+        <p className="scene-notice error" role="alert">
           {storageError}
         </p>
       ) : null}
 
-      {!ready ? (
-        <p className="hint idle-hint">Restoring your tree…</p>
-      ) : !pending ? (
-        <p className="hint idle-hint">
-          {placed.length === 0
-            ? 'Add a photo to make your first ornament.'
-            : 'Add another photo, then tap the tree to hang it.'}
-        </p>
-      ) : null}
-
-      <ChristmasTree
-        ornaments={placed}
-        placing={pending !== null}
-        onPlace={handlePlace}
-        onSelect={setSelectedId}
-      />
-
-      <footer className="dock">
+      <div className="scene-ui">
         <PhotoUploader
           previewUrl={pending?.photoUrl ?? null}
           colors={pending?.colors ?? []}
@@ -245,7 +235,7 @@ function App() {
           }
           onPhotoReady={handlePhotoReady}
         />
-      </footer>
+      </div>
 
       {selected ? (
         <MemoryViewer

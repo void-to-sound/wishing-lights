@@ -1,8 +1,8 @@
 import { useEffect, useState, type MouseEvent } from 'react'
+import { TREE_ANCHOR } from '../lib/roomCamera.ts'
 import { Ornament } from './Ornament.tsx'
 import type { Ornament as OrnamentModel, TreePosition } from '../types/ornament.ts'
 
-const ROOM_SRC = '/assets/winter-room.png'
 const TREE_SRC = '/assets/white-light-tree.png'
 
 type PlacedOrnament = OrnamentModel & { position: TreePosition }
@@ -15,7 +15,7 @@ interface ChristmasTreeProps {
 }
 
 /**
- * Photographic room with the birch tree as its own layer.
+ * The birch tree, placed in scene coordinates by .tree-anchor.
  * A tap records a fraction of the tree image, so an ornament stays on the
  * same branch when the screen size changes. Only the visible branches accept
  * a new ornament. Ornament taps open a memory instead of placing.
@@ -44,35 +44,35 @@ export function ChristmasTree({
   }
 
   return (
-    <div className="tree-frame">
-      <div className="room-stage">
-        <img className="room-photo" src={ROOM_SRC} alt="" draggable={false} />
-        <div
-          className={placing ? 'tree-anchor is-placing' : 'tree-anchor'}
-          onClick={handleClick}
-        >
-          <img className="tree-photo" src={TREE_SRC} alt="" draggable={false} />
-          <ul className="ornament-layer" aria-label="Ornaments on the tree">
-            {ornaments.map((ornament) => (
-              <li
-                key={ornament.id}
-                className="ornament-slot"
-                style={{
-                  left: `${ornament.position.x * 100}%`,
-                  top: `${ornament.position.y * 100}%`,
-                }}
-              >
-                <Ornament
-                  id={ornament.id}
-                  colors={ornament.colors}
-                  label="Open memory"
-                  onPress={() => onSelect(ornament.id)}
-                />
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
+    <div
+      className={placing ? 'tree-anchor is-placing' : 'tree-anchor'}
+      style={{
+        left: `${TREE_ANCHOR.x * 100}%`,
+        bottom: `${TREE_ANCHOR.bottom * 100}%`,
+        width: `${TREE_ANCHOR.width * 100}%`,
+      }}
+      onClick={handleClick}
+    >
+      <img className="tree-photo" src={TREE_SRC} alt="" draggable={false} />
+      <ul className="ornament-layer" aria-label="Ornaments on the tree">
+        {ornaments.map((ornament) => (
+          <li
+            key={ornament.id}
+            className="ornament-slot"
+            style={{
+              left: `${ornament.position.x * 100}%`,
+              top: `${ornament.position.y * 100}%`,
+            }}
+          >
+            <Ornament
+              id={ornament.id}
+              colors={ornament.colors}
+              label="Open memory"
+              onPress={() => onSelect(ornament.id)}
+            />
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ceramic tile masks</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <p class="studio">Wishing Lights experiment</p>
+      <h1>Ceramic tile masks</h1>
+      <p class="lede">
+        Inspect the blue, burgundy, and orange masks, then compare a luminance-preserving recolor
+        with the original. Unmasked pixels, including cream, gold, cracks, and highlights, stay as they are.
+      </p>
+
+      <section id="report" class="report" aria-live="polite" aria-label="Validation summary"></section>
+
+      <section class="block">
+        <h2>Recolor</h2>
+        <div class="controls">
+          <label>
+            Blue
+            <span class="hex" id="blue-value">#1f8a56</span>
+            <input id="color-blue" type="color" value="#1f8a56" />
+          </label>
+          <label>
+            Burgundy
+            <span class="hex" id="burgundy-value">#6a3dcc</span>
+            <input id="color-burgundy" type="color" value="#6a3dcc" />
+          </label>
+          <label>
+            Orange
+            <span class="hex" id="orange-value">#e23d5c</span>
+            <input id="color-orange" type="color" value="#e23d5c" />
+          </label>
+          <label class="strength">
+            Strength
+            <span id="strength-value">100%</span>
+            <input id="strength" type="range" min="0" max="100" value="100" />
+          </label>
+          <button id="reset" type="button">Reset colors</button>
+        </div>
+
+        <div class="viewbar">
+          <fieldset class="choice">
+            <legend>Background</legend>
+            <label><input type="radio" name="backdrop" value="checker" checked /> Checkerboard</label>
+            <label><input type="radio" name="backdrop" value="dark" /> Dark</label>
+          </fieldset>
+          <div class="zoombar">
+            <button id="zoom-out" type="button">Zoom out</button>
+            <button id="zoom-in" type="button">Zoom in</button>
+            <button id="zoom-fit" type="button">Fit</button>
+            <span id="zoom-value">100%</span>
+          </div>
+        </div>
+
+        <div class="compare stage" id="compare">
+          <figure>
+            <canvas id="original" aria-label="Original ceramic ornament"></canvas>
+            <figcaption>Original</figcaption>
+          </figure>
+          <figure>
+            <canvas id="recolored" aria-label="Recolored ceramic ornament"></canvas>
+            <figcaption>Recolored</figcaption>
+          </figure>
+        </div>
+        <p class="hint">Drag to pan. Scroll to zoom. The original and the recolor stay aligned.</p>
+      </section>
+
+      <section class="block">
+        <h2>Mask inspector</h2>
+        <div class="viewbar">
+          <fieldset class="choice">
+            <legend>View</legend>
+            <label><input type="radio" name="inspect" value="original" /> Original</label>
+            <label><input type="radio" name="inspect" value="blue" /> Blue mask</label>
+            <label><input type="radio" name="inspect" value="burgundy" /> Burgundy mask</label>
+            <label><input type="radio" name="inspect" value="orange" /> Orange mask</label>
+            <label><input type="radio" name="inspect" value="overlay" checked /> Overlay</label>
+            <label><input type="radio" name="inspect" value="overlap" /> Overlap</label>
+          </fieldset>
+          <label class="strength">
+            Overlay opacity
+            <span id="opacity-value">70%</span>
+            <input id="opacity" type="range" min="0" max="100" value="70" />
+          </label>
+        </div>
+        <div class="inspect stage">
+          <canvas id="inspector" aria-label="Mask inspection view"></canvas>
+        </div>
+        <div class="thumbs" id="thumbs" aria-label="Color overlays">
+          <figure>
+            <canvas id="thumb-blue" aria-label="Blue mask overlay"></canvas>
+            <figcaption>Blue overlay</figcaption>
+          </figure>
+          <figure>
+            <canvas id="thumb-burgundy" aria-label="Burgundy mask overlay"></canvas>
+            <figcaption>Burgundy overlay</figcaption>
+          </figure>
+          <figure>
+            <canvas id="thumb-orange" aria-label="Orange mask overlay"></canvas>
+            <figcaption>Orange overlay</figcaption>
+          </figure>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

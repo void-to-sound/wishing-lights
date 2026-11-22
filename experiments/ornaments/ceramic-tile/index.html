@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>도자기 타일 색 바꾸기</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <p class="studio">Wishing Lights experiment</p>
+      <h1>도자기 타일</h1>
+      <p class="lede">
+        소나무 배경을 지운 타일이다. 파랑, 자주, 주황 유약만 밝기를 유지한 채 다시 칠한다.
+        크림색 균열 바탕과 금색 고리는 그대로 둔다. 원본과 나란히 두고 음영, 균열, 광택이 남는지 본다.
+      </p>
+
+      <section class="controls" aria-label="유약 색">
+        <label>
+          파랑
+          <span class="hex" id="blue-value">#313a4d</span>
+          <input id="color-blue" type="color" value="#313a4d" />
+        </label>
+        <label>
+          자주
+          <span class="hex" id="purple-value">#572422</span>
+          <input id="color-purple" type="color" value="#572422" />
+        </label>
+        <label>
+          주황
+          <span class="hex" id="orange-value">#b46138</span>
+          <input id="color-orange" type="color" value="#b46138" />
+        </label>
+        <label class="strength">
+          색 강도
+          <span id="strength-value">100%</span>
+          <input id="strength" type="range" min="0" max="100" value="100" />
+        </label>
+        <div class="presets">
+          <button id="use-original" type="button">원래 유약</button>
+          <button id="use-trial" type="button">시험 색</button>
+        </div>
+      </section>
+
+      <fieldset class="backdrop">
+        <legend>배경</legend>
+        <label><input type="radio" name="backdrop" value="checker" checked /> 바둑판</label>
+        <label><input type="radio" name="backdrop" value="tree" /> 어두운 나무</label>
+      </fieldset>
+
+      <section class="stage" id="stage" aria-label="원본과 다시 칠한 타일">
+        <figure>
+          <canvas id="original" aria-label="배경이 지워진 원본 타일"></canvas>
+          <figcaption>원본</figcaption>
+        </figure>
+        <figure>
+          <canvas id="recolored" aria-label="유약 색을 바꾼 타일"></canvas>
+          <figcaption>밝기 유지 재색칠</figcaption>
+        </figure>
+      </section>
+
+      <section class="masks" aria-label="유약 마스크">
+        <figure>
+          <img src="./assets/mask-blue.png" alt="파란색 유약 마스크" />
+          <figcaption>파랑 마스크</figcaption>
+        </figure>
+        <figure>
+          <img src="./assets/mask-purple.png" alt="자주색 유약 마스크" />
+          <figcaption>자주 마스크</figcaption>
+        </figure>
+        <figure>
+          <img src="./assets/mask-orange.png" alt="주황색 유약 마스크" />
+          <figcaption>주황 마스크</figcaption>
+        </figure>
+      </section>
+
+      <p class="note">
+        마스크가 흰 곳만 색이 바뀐다. 무늬 안의 어두운 균열과 밝은 광택은 그 픽셀의 밝기를 남긴다.
+        투명 배경 파일은 <span class="path">assets/ornament.png</span> 이다.
+      </p>
+    </main>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

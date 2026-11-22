@@ -1,0 +1,270 @@
+:root {
+  color-scheme: dark;
+  color: #f4efe6;
+  background: #16130f;
+  font-family: "Iowan Old Style", Palatino, Georgia, serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.page {
+  width: min(1100px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 28px 0 72px;
+}
+
+.studio,
+.lede,
+.hint,
+figcaption,
+label,
+button,
+legend,
+.report {
+  font-family: "Avenir Next", "Segoe UI", Helvetica, sans-serif;
+}
+
+.studio {
+  margin: 0;
+  color: #b7aa98;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 8px 0 0;
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+h2 {
+  margin: 0 0 12px;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.lede,
+.hint {
+  max-width: 42rem;
+  color: #d9d0c3;
+  line-height: 1.5;
+}
+
+.hint {
+  margin: 8px 0 0;
+  font-size: 0.82rem;
+}
+
+.block {
+  margin-top: 28px;
+}
+
+.report {
+  margin-top: 18px;
+  padding: 12px 14px;
+  border: 1px solid #3a3228;
+  border-radius: 12px;
+  background: #221c16;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.report p {
+  margin: 0;
+}
+
+.report .review {
+  margin-top: 6px;
+  color: #e4c98a;
+}
+
+.report .problem {
+  margin-top: 6px;
+  color: #f0a394;
+}
+
+.report .ok {
+  margin-top: 6px;
+  color: #d9d0c3;
+}
+
+.controls,
+.viewbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 22px;
+  align-items: end;
+  margin: 12px 0;
+}
+
+label {
+  display: grid;
+  gap: 6px;
+  font-size: 0.85rem;
+}
+
+.hex,
+#strength-value,
+#opacity-value,
+#zoom-value {
+  color: #b7aa98;
+  font-variant-numeric: tabular-nums;
+}
+
+input[type="color"] {
+  width: 72px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid #4a4034;
+  border-radius: 8px;
+  background: #2a241c;
+  cursor: pointer;
+}
+
+input[type="range"] {
+  width: 140px;
+}
+
+button {
+  color: inherit;
+  background: #2a241c;
+  border: 1px solid #4a4034;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #3a3126;
+}
+
+.choice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.choice legend {
+  margin-right: 6px;
+  font-size: 0.85rem;
+}
+
+.choice label {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.zoombar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.stage {
+  border-radius: 18px;
+  background-color: #cfc6b8;
+  background-image:
+    linear-gradient(45deg, #b7ad9e 25%, transparent 25%),
+    linear-gradient(-45deg, #b7ad9e 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #b7ad9e 75%),
+    linear-gradient(-45deg, transparent 75%, #b7ad9e 75%);
+  background-size: 22px 22px;
+  background-position:
+    0 0,
+    0 11px,
+    11px -11px,
+    -11px 0;
+}
+
+.stage.is-dark {
+  background: #10140f;
+}
+
+.compare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 12px;
+}
+
+.compare canvas,
+.inspect canvas,
+.thumbs canvas {
+  display: block;
+  width: 100%;
+  background: transparent;
+  touch-action: none;
+  cursor: grab;
+}
+
+.compare canvas {
+  height: min(62vw, 520px);
+}
+
+.inspect {
+  padding: 12px;
+}
+
+.inspect canvas {
+  height: min(78vw, 720px);
+}
+
+.compare figure,
+.thumbs figure {
+  margin: 0;
+}
+
+figcaption {
+  margin-top: 8px;
+  color: #3d3428;
+  font-size: 0.8rem;
+}
+
+.stage.is-dark figcaption {
+  color: #d9d0c3;
+}
+
+.thumbs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.thumbs canvas {
+  height: 220px;
+  border-radius: 12px;
+  cursor: default;
+  background-color: #10140f;
+}
+
+.thumbs figcaption {
+  color: #b7aa98;
+}
+
+@media (max-width: 720px) {
+  .compare,
+  .thumbs {
+    grid-template-columns: 1fr;
+  }
+
+  .compare canvas,
+  .thumbs canvas {
+    height: 320px;
+  }
+}

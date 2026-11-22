@@ -8,10 +8,17 @@ export interface TreePosition {
 export type OrnamentShape = 'circle'
 
 /**
- * Surface treatment. Only the flat fill is drawn today.
- * Later material experiments can extend this union.
+ * Surface treatment.
+ * `flat` is the original color disc. The designer adds the other three.
  */
-export type OrnamentMaterial = 'flat'
+export type OrnamentMaterial = 'flat' | 'glass' | 'crystal' | 'metal'
+
+/** A finished designer ornament, before it is stored or hung. */
+export interface OrnamentDraft {
+  photo: PreparedPhoto
+  material: Exclude<OrnamentMaterial, 'flat'>
+  colors: string[]
+}
 
 /** A photograph turned into an ornament. All of this lives in React state. */
 export interface Ornament {

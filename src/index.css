@@ -89,6 +89,305 @@ textarea {
   z-index: 2;
 }
 
+:root {
+  /* Change this to restyle every jewelry-box label. The words stay real text. */
+  --wishing-ui-font: "Avenir Next", "Apple SD Gothic Neo", "Noto Sans KR", "Segoe UI", sans-serif;
+}
+
+.glass-pill {
+  min-height: 42px;
+  padding: 8px 18px;
+  border: 1px solid rgb(255 236 210 / 0.9);
+  border-radius: 999px;
+  background: rgb(255 248 236 / 0.55);
+  color: #6a5134;
+  font-family: var(--wishing-ui-font);
+  font-size: 0.92rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-shadow: 0 1px 0 rgb(255 255 255 / 0.35);
+  backdrop-filter: blur(8px);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.55),
+    0 10px 24px rgb(70 40 12 / 0.16);
+  cursor: pointer;
+}
+
+.glass-pill:hover,
+.glass-pill:focus-visible {
+  background: rgb(255 244 220 / 0.42);
+}
+
+.glass-pill:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.jewelry-hit {
+  position: absolute;
+  z-index: 3;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+}
+
+.jewelry-stage {
+  position: absolute;
+  z-index: 2;
+  width: 11.5%;
+  transform: translate(-50%, -100%);
+  pointer-events: none;
+}
+
+.jewelry-glow {
+  position: absolute;
+  left: 50%;
+  bottom: 8%;
+  width: 140%;
+  height: 70%;
+  transform: translate(-50%, 0);
+  background: radial-gradient(ellipse, rgb(255 186 96 / 0.45), transparent 68%);
+}
+
+.jewelry-glow span {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgb(255 232 190 / 0.95);
+  animation: jewelry-spark 2.8s ease-in-out infinite;
+}
+
+.jewelry-glow span:nth-child(1) {
+  left: 28%;
+  top: 42%;
+}
+
+.jewelry-glow span:nth-child(2) {
+  left: 54%;
+  top: 26%;
+  animation-delay: 0.45s;
+}
+
+.jewelry-glow span:nth-child(3) {
+  left: 70%;
+  top: 50%;
+  animation-delay: 0.9s;
+}
+
+.jewelry-frame {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.jewelry-frame.is-next {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.jewelry-missing {
+  position: absolute;
+  margin: 8px 0 0;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgb(28 18 10 / 0.55);
+  color: #f6efe2;
+  font-size: 0.68rem;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  transform: translate(-50%, 0);
+}
+
+.floating-ornament {
+  position: absolute;
+  z-index: 4;
+  width: 132px;
+  height: 154px;
+  transform: translate(-50%, -145%);
+  animation: ornament-float 4.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.ornament-atelier {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  color: #6a5134;
+  font-family: var(--wishing-ui-font);
+  pointer-events: none;
+}
+
+.ornament-atelier button {
+  pointer-events: auto;
+}
+
+.atelier-panel {
+  position: absolute;
+  top: 50%;
+  right: max(28px, env(safe-area-inset-right));
+  width: min(16rem, calc(100% - 48px));
+  transform: translateY(-54%);
+  text-align: center;
+}
+
+.atelier-tabs {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 14px;
+  color: rgb(255 248 236 / 0.82);
+  font-size: 0.78rem;
+}
+
+.atelier-tabs span {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgb(255 248 236 / 0.14);
+}
+
+.atelier-tabs .is-current {
+  background: rgb(255 248 236 / 0.28);
+}
+
+.material-orbs {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+}
+
+.material-orb {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.material-gem {
+  width: 54px;
+  height: 54px;
+  border: 1px solid rgb(255 244 224 / 0.75);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 32% 28%, rgb(255 255 255 / 0.95), rgb(255 255 255 / 0.08) 42%, rgb(186 164 132 / 0.45));
+  box-shadow: inset 0 -8px 12px rgb(120 90 50 / 0.18);
+}
+
+.material-orb.is-crystal .material-gem {
+  background:
+    radial-gradient(circle at 32% 28%, #fff, rgb(255 255 255 / 0.2) 36%, rgb(210 226 240 / 0.72));
+}
+
+.material-orb.is-metal .material-gem {
+  background:
+    radial-gradient(circle at 32% 28%, #fff6dd, #e6c27a 46%, #b8883e);
+}
+
+.material-orb[aria-pressed='true'] .material-gem {
+  box-shadow:
+    0 0 0 2px rgb(255 236 190 / 0.95),
+    0 0 18px rgb(255 196 110 / 0.7);
+}
+
+.material-name {
+  font-size: 0.72rem;
+}
+
+.atelier-label,
+.atelier-note,
+.atelier-error {
+  margin: 14px 0 0;
+  font-size: 0.75rem;
+}
+
+.atelier-note,
+.atelier-error {
+  color: rgb(255 244 224 / 0.78);
+}
+
+.atelier-error {
+  color: #ffd0c2;
+}
+
+.color-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  min-height: 28px;
+  margin-top: 8px;
+}
+
+.color-dots button {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.color-dots button[aria-pressed='true'] {
+  border-color: #fffaf2;
+}
+
+.atelier-panel .glass-pill {
+  margin-top: 16px;
+}
+
+.atelier-cancel,
+.atelier-finish {
+  position: absolute;
+  bottom: max(22px, env(safe-area-inset-bottom));
+}
+
+.atelier-cancel {
+  left: max(22px, env(safe-area-inset-left));
+}
+
+.atelier-finish {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@keyframes jewelry-spark {
+  50% {
+    transform: translateY(-10px);
+    opacity: 0.35;
+  }
+}
+
+@keyframes ornament-float {
+  50% {
+    transform: translate(-50%, calc(-145% - 8px));
+  }
+}
+
+@media (max-aspect-ratio: 1) {
+  .atelier-panel {
+    top: auto;
+    bottom: max(84px, calc(env(safe-area-inset-bottom) + 72px));
+    transform: none;
+  }
+
+  .floating-ornament {
+    width: 104px;
+    height: 122px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jewelry-glow span,
+  .floating-ornament {
+    animation: none;
+  }
+}
+
 .camera-mark {
   position: absolute;
   pointer-events: none;

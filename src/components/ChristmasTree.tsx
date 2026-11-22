@@ -67,6 +67,8 @@ export function ChristmasTree({
             <Ornament
               id={ornament.id}
               colors={ornament.colors}
+              photoUrl={ornament.photoUrl}
+              material={ornament.material}
               label="Open memory"
               onPress={() => onSelect(ornament.id)}
             />

@@ -9,6 +9,10 @@ import {
   type ReactNode,
 } from 'react'
 import { CameraExperiment } from './CameraExperiment.tsx'
+import { JewelryHotspot, JewelryStage } from './JewelryBox.tsx'
+import { OrnamentDesigner } from './OrnamentDesigner.tsx'
+import { Ornament } from './Ornament.tsx'
+import { useJewelryVisit } from './useJewelryVisit.ts'
 import { framingLimitMessage, panByPixels, pinchZoomFactor, wheelZoomFactor, zoomAtPoint } from '../lib/cameraGesture.ts'
 import { frameFocus } from '../lib/cameraPresets.ts'
 import {
@@ -28,6 +32,7 @@ import {
   type Sequence,
 } from '../lib/cameraSequence.ts'
 import { applyFraming, framingFromSequence, readFraming, writeFraming, type StoredFraming } from '../lib/framingStore.ts'
+import { jewelryStagePoint } from '../lib/jewelryBox.ts'
 import { deletePlate, loadPlate, readImageFile, savePlate } from '../lib/plateStore.ts'
 import {
   ROOM_ASPECT,
@@ -37,11 +42,16 @@ import {
   frameRoom,
   type RoomCamera,
 } from '../lib/roomCamera.ts'
+import type { OrnamentDraft } from '../types/ornament.ts'
 
 interface WinterSceneProps {
   children: ReactNode
   /** Developer camera sequence. Off unless the page is opened with ?camera. */
   experiment?: boolean
+  /** True while the jewelry-box visit is away from the resting room. */
+  onVisitChange?: (active: boolean) => void
+  /** Called once, when a designed ornament is ready to hang. */
+  onOrnamentCommit?: (draft: OrnamentDraft) => void
 }
 
 interface PlateView {
@@ -60,14 +70,17 @@ const LOOP_HOLD = 800
  * to the picture. The experiment edits and plays named shots. It does not
  * replace the home camera.
  */
-export function WinterScene({ children, experiment = false }: WinterSceneProps) {
+export function WinterScene({
+  children,
+  experiment = false,
+  onVisitChange,
+  onOrnamentCommit,
+}: WinterSceneProps) {
   const frameRef = useRef<HTMLDivElement>(null)
   const [viewport, setViewport] = useState({ width: 0, height: 0 })
   const [lookX, setLookX] = useState(TREE_FOCUS_X)
   const [dragging, setDragging] = useState(false)
-  const [framing, setFraming] = useState<StoredFraming | null>(() =>
-    experiment ? readFraming() : null,
-  )
+  const [framing, setFraming] = useState<StoredFraming | null>(() => readFraming())
   const [edits, setEdits] = useState<Sequence | null>(null)
   const [dirty, setDirty] = useState(false)
   const [editShot, setEditShot] = useState(0)
@@ -120,7 +133,6 @@ export function WinterScene({ children, experiment = false }: WinterSceneProps) 
   }, [])
 
   useEffect(() => {
-    if (!experiment) return
     let cancelled = false
     loadPlate()
       .then((stored) => {
@@ -172,6 +184,19 @@ export function WinterScene({ children, experiment = false }: WinterSceneProps) 
     [WINTER_ROOM_SCENE.id]: sceneAspect(WINTER_ROOM_SCENE),
     [JEWELRY_BOX_SCENE.id]: sceneAspect(boxScene),
   }
+  const approach = useMemo(() => {
+    if (experiment || !home) return null
+    const base = framing ? applyFraming(createDefaultSequence(home), framing) : createDefaultSequence(home)
+    return retargetHome(base, home)
+  }, [experiment, home, framing])
+  const visit = useJewelryVisit({
+    enabled: !experiment,
+    viewport,
+    sequence: approach,
+    aspects,
+    onCommit: onOrnamentCommit,
+    onActive: onVisitChange,
+  })
   const editing = Boolean(experiment && activity === 'edit' && !playing && draft)
   const editedShot = draft?.shots[editShot]
   const editedSample = editedShot
@@ -193,14 +218,21 @@ export function WinterScene({ children, experiment = false }: WinterSceneProps) 
             sceneAspect(editedScene),
           )
       : null
-  const camera = !experiment || !editCamera ? homeCamera : activity === 'play' && held ? held : editCamera
+  const visitArtwork = !experiment && visit.sceneId ? artworkFor(visit.sceneId, boxScene) : null
+  const camera = experiment
+    ? !editCamera
+      ? homeCamera
+      : activity === 'play' && held
+        ? held
+        : editCamera
+    : (visit.camera ?? homeCamera)
   const shownScene =
     !experiment || !draft
       ? WINTER_ROOM_SCENE
       : activity === 'play' && activeShot != null
         ? artworkFor(draft.shots[activeShot]?.sceneId ?? WINTER_ROOM_SCENE.id, boxScene)
         : editedScene
-  const showRoom = !experiment || shownScene.includesRoom
+  const showRoom = experiment ? shownScene.includesRoom : !visitArtwork || visitArtwork.includesRoom
 
   useLayoutEffect(() => {
     viewportRef.current = viewport
@@ -419,7 +451,10 @@ export function WinterScene({ children, experiment = false }: WinterSceneProps) 
   }
 
   function onPointerDown(event: PointerEvent<HTMLDivElement>) {
-    if (event.target instanceof Element && event.target.closest('.camera-experiment')) return
+    if (event.target instanceof Element && event.target.closest('.camera-experiment, .jewelry-stage, .ornament-atelier, .jewelry-hit')) {
+      return
+    }
+    if (!experiment && visit.phase !== 'closed') return
     if (playing || gliding.current) {
       suppressClick.current = true
       return
@@ -516,14 +551,24 @@ export function WinterScene({ children, experiment = false }: WinterSceneProps) 
   }
 
   function onClickCapture(event: MouseEvent<HTMLDivElement>) {
-    if (event.target instanceof Element && event.target.closest('.camera-experiment')) return
+    if (
+      event.target instanceof Element &&
+      event.target.closest('.camera-experiment, .jewelry-stage, .ornament-atelier, .jewelry-hit')
+    ) {
+      return
+    }
+    if (!experiment && visit.phase !== 'closed') {
+      event.preventDefault()
+      event.stopPropagation()
+      return
+    }
     if (!editingRef.current && !suppressClick.current && !gliding.current) return
     event.preventDefault()
     event.stopPropagation()
     suppressClick.current = false
   }
 
-  const exploring = !editing && held === null && camera.explore
+  const exploring = !editing && held === null && visit.phase === 'closed' && camera.explore
   const frameClass = [
     'scene-frame',
     exploring ? 'is-exploring' : '',
@@ -577,13 +622,52 @@ export function WinterScene({ children, experiment = false }: WinterSceneProps) 
       >
         <img
           className="scene-background"
-          src={experiment ? shownScene.src : ROOM_SRC}
+          src={experiment ? shownScene.src : (visitArtwork?.src ?? ROOM_SRC)}
           alt=""
           draggable={false}
         />
         <div className="scene-effects" />
-        <div className="scene-objects">{showRoom ? children : null}</div>
+        <div className="scene-objects">
+          {showRoom ? children : null}
+          {!experiment ? (
+            <JewelryStage
+              phase={visit.phase}
+              lid={visit.lid}
+              anchor={jewelryStagePoint(plate !== null && visit.sceneId === JEWELRY_BOX_SCENE.id)}
+            />
+          ) : null}
+          {!experiment && visit.phase === 'closed' ? <JewelryHotspot onOpen={visit.activate} /> : null}
+        </div>
       </div>
+      {!experiment && visit.photoUrl && (visit.phase === 'open' || visit.phase === 'designing') && visit.camera ? (
+        <div
+          className="floating-ornament"
+          style={floatingStyle(stageAnchor(visit.camera, visit.sceneId, plate !== null))}
+        >
+          <Ornament
+            id="designer-preview"
+            colors={visit.accent ? [visit.accent, ...visit.colors] : visit.colors}
+            photoUrl={visit.photoUrl}
+            material={visit.material}
+            label="Ornament preview"
+          />
+        </div>
+      ) : null}
+      {!experiment && (visit.phase === 'open' || visit.phase === 'designing') ? (
+        <OrnamentDesigner
+          photoUrl={visit.photoUrl}
+          colors={visit.colors}
+          accent={visit.accent}
+          material={visit.material}
+          error={visit.error}
+          placeholder={!plate && visit.sceneId === JEWELRY_BOX_SCENE.id}
+          onPhoto={visit.choosePhoto}
+          onMaterial={visit.chooseMaterial}
+          onAccent={visit.chooseAccent}
+          onFinish={visit.finish}
+          onCancel={visit.cancel}
+        />
+      ) : null}
       {experiment && draft && editedSample ? (
         <CameraExperiment
           editShot={editShot}
@@ -613,6 +697,22 @@ export function WinterScene({ children, experiment = false }: WinterSceneProps) 
       ) : null}
     </div>
   )
+}
+
+function stageAnchor(
+  camera: RoomCamera,
+  sceneId: string | null,
+  usingPlate: boolean,
+): { x: number; y: number } {
+  const point = jewelryStagePoint(usingPlate && sceneId === JEWELRY_BOX_SCENE.id)
+  return {
+    x: camera.x + point.x * camera.width,
+    y: camera.y + point.y * camera.height,
+  }
+}
+
+function floatingStyle(anchor: { x: number; y: number }): { left: number; top: number } {
+  return { left: anchor.x, top: anchor.y }
 }
 
 function artworkFor(sceneId: string, box: SceneArtwork): SceneArtwork {

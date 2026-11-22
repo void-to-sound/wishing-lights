@@ -44,7 +44,8 @@ export function parseStoredOrnament(value: unknown): StoredOrnament | null {
     return null
   }
   if (value.shape !== 'circle') return null
-  if (value.material !== 'flat') return null
+  const material = parseMaterial(value.material)
+  if (!material) return null
 
   const position = parsePosition(value.position)
   if (position === undefined) return null
@@ -62,7 +63,7 @@ export function parseStoredOrnament(value: unknown): StoredOrnament | null {
     photo: value.photo,
     colors: [...value.colors],
     shape: 'circle',
-    material: 'flat',
+    material,
     position,
     message: value.message,
     soundId: value.soundId,
@@ -227,6 +228,13 @@ function runTransaction<T>(
     transaction.onabort = fail
     transaction.onerror = fail
   })
+}
+
+const MATERIALS: readonly OrnamentMaterial[] = ['flat', 'glass', 'crystal', 'metal']
+
+function parseMaterial(value: unknown): OrnamentMaterial | null {
+  if (typeof value !== 'string') return null
+  return MATERIALS.find((material) => material === value) ?? null
 }
 
 function parsePosition(value: unknown): TreePosition | null | undefined {

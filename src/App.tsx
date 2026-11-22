@@ -10,7 +10,12 @@ import {
   saveOrnament,
   type StoredOrnament,
 } from './lib/ornamentStore.ts'
-import type { Ornament as OrnamentModel, PreparedPhoto, TreePosition } from './types/ornament.ts'
+import type {
+  Ornament as OrnamentModel,
+  OrnamentDraft,
+  PreparedPhoto,
+  TreePosition,
+} from './types/ornament.ts'
 
 const SAVE_ERROR =
   'This change could not be saved on this device. A refresh may not keep it.'
@@ -48,6 +53,7 @@ function App() {
   const [ornaments, setOrnaments] = useState<OrnamentModel[]>([])
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [ready, setReady] = useState(false)
+  const [visiting, setVisiting] = useState(false)
   const [storageError, setStorageError] = useState<string | null>(null)
   const ornamentsRef = useRef(ornaments)
   const photosRef = useRef(new Map<string, Blob>())
@@ -136,6 +142,18 @@ function App() {
   }
 
   function handlePhotoReady(photo: PreparedPhoto) {
+    commitOrnament(photo, 'flat', photo.colors)
+  }
+
+  function handleDesigned(draft: OrnamentDraft) {
+    commitOrnament(draft.photo, draft.material, draft.colors)
+  }
+
+  function commitOrnament(
+    photo: PreparedPhoto,
+    material: OrnamentModel['material'],
+    colors: string[],
+  ) {
     if (!hydratedRef.current) {
       URL.revokeObjectURL(photo.photoUrl)
       return
@@ -152,9 +170,9 @@ function App() {
     const created: OrnamentModel = {
       id: createId(),
       photoUrl: photo.photoUrl,
-      colors: photo.colors,
+      colors,
       shape: 'circle',
-      material: 'flat',
+      material,
       position: null,
       message: '',
       soundId: null,
@@ -204,7 +222,11 @@ function App() {
     <div className="app">
       <h1 className="visually-hidden">Wishing Lights</h1>
 
-      <WinterScene experiment={new URLSearchParams(window.location.search).has('camera')}>
+      <WinterScene
+        experiment={new URLSearchParams(window.location.search).has('camera')}
+        onVisitChange={setVisiting}
+        onOrnamentCommit={handleDesigned}
+      >
         <ChristmasTree
           ornaments={placed}
           placing={pending !== null}
@@ -219,23 +241,27 @@ function App() {
         </p>
       ) : null}
 
-      <div className="scene-ui">
-        <PhotoUploader
-          previewUrl={pending?.photoUrl ?? null}
-          colors={pending?.colors ?? []}
-          disabled={!ready}
-          ornament={
-            pending ? (
-              <Ornament
-                id={`preview-${pending.id}`}
-                colors={pending.colors}
-                label="New ornament"
-              />
-            ) : null
-          }
-          onPhotoReady={handlePhotoReady}
-        />
-      </div>
+      {!visiting ? (
+        <div className="scene-ui">
+          <PhotoUploader
+            previewUrl={pending?.photoUrl ?? null}
+            colors={pending?.colors ?? []}
+            disabled={!ready}
+            ornament={
+              pending ? (
+                <Ornament
+                  id={`preview-${pending.id}`}
+                  colors={pending.colors}
+                  photoUrl={pending.photoUrl}
+                  material={pending.material}
+                  label="New ornament"
+                />
+              ) : null
+            }
+            onPhotoReady={handlePhotoReady}
+          />
+        </div>
+      ) : null}
 
       {selected ? (
         <MemoryViewer

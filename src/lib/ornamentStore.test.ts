@@ -66,10 +66,19 @@ describe('parseStoredOrnament', () => {
     expect(parseStoredOrnament(null)).toBeNull()
     expect(parseStoredOrnament({ ...ornament(), position: { x: Number.NaN, y: 0.2 } })).toBeNull()
     expect(parseStoredOrnament({ ...ornament(), shape: 'crystal' })).toBeNull()
+    expect(parseStoredOrnament({ ...ornament(), material: 'velvet' as StoredOrnament['material'] })).toBeNull()
   })
 })
 
 describe('ornament store', () => {
+  it('round-trips a designed glass ornament and still accepts the original flat ones', async () => {
+    await saveOrnament(ornament({ id: 'glass-1', material: 'glass' }))
+    await saveOrnament(ornament({ id: 'flat-1', material: 'flat' }))
+    const loaded = await loadOrnaments()
+    expect(loaded.skipped).toBe(0)
+    expect(loaded.ornaments.map((item) => item.material).sort()).toEqual(['flat', 'glass'])
+  })
+
   it('round-trips the photo blob, placement, and message', async () => {
     const saved = ornament({
       position: { x: 0.125, y: 0.875 },

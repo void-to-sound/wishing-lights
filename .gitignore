@@ -17,6 +17,14 @@ dist-ssr
 .env.*
 !.env.example
 
+# Temporary copyrighted reference audio. These names only.
+# A later licensed file with a different name under public/audio/ stays tracked.
+# Delete a line below when that exact file is replaced and should be committed.
+public/audio/asmr1.wav
+public/audio/asmr2.wav
+public/audio/lofi1.wav
+public/audio/lofi2.mp3
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

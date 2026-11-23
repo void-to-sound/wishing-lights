@@ -8,6 +8,7 @@ import {
   type PointerEvent,
   type ReactNode,
 } from 'react'
+import { LofiAudioControls, MantelAudioControls } from './AudioControls.tsx'
 import { CameraExperiment } from './CameraExperiment.tsx'
 import { JewelryHotspot, JewelryStage } from './JewelryBox.tsx'
 import { OrnamentDesigner } from './OrnamentDesigner.tsx'
@@ -451,7 +452,7 @@ export function WinterScene({
   }
 
   function onPointerDown(event: PointerEvent<HTMLDivElement>) {
-    if (event.target instanceof Element && event.target.closest('.camera-experiment, .jewelry-stage, .ornament-atelier, .jewelry-hit')) {
+    if (event.target instanceof Element && event.target.closest('.camera-experiment, .jewelry-stage, .ornament-atelier, .jewelry-hit, .audio-controls')) {
       return
     }
     if (!experiment && visit.phase !== 'closed') return
@@ -553,7 +554,7 @@ export function WinterScene({
   function onClickCapture(event: MouseEvent<HTMLDivElement>) {
     if (
       event.target instanceof Element &&
-      event.target.closest('.camera-experiment, .jewelry-stage, .ornament-atelier, .jewelry-hit')
+      event.target.closest('.camera-experiment, .jewelry-stage, .ornament-atelier, .jewelry-hit, .audio-controls')
     ) {
       return
     }
@@ -637,8 +638,10 @@ export function WinterScene({
             />
           ) : null}
           {!experiment && visit.phase === 'closed' ? <JewelryHotspot onOpen={visit.activate} /> : null}
+          {!experiment ? <MantelAudioControls hidden={!showRoom} /> : null}
         </div>
       </div>
+      {!experiment ? <LofiAudioControls /> : null}
       {!experiment && visit.photoUrl && (visit.phase === 'open' || visit.phase === 'designing') && visit.camera ? (
         <div
           className="floating-ornament"
